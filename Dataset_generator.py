@@ -18,8 +18,8 @@ Feature_number = 10
 PicturesPFeature_train = 150
 PicturesPFeature_test = 30
 color = 0
-resize_x = 0.125
-resize_y = 0.125
+resize_x = 0.5
+resize_y = 0.5
 shape = (int(480*resize_x), int(640*resize_y), 1) #1 because greyscale
 #train options
 batch_size = 20
