@@ -1,9 +1,8 @@
-There are 2 different Models in this; to train model 1 
-execute Model_trainer.
+There are 2 Models to be train. If one executes Model_trainer.py both should be trained. (I hope)
 
-To train model 2 execute Model_trainer2.
+If this is not the case just execute Model_trainer2.py which will train the real time system.
 
-Both need the same Datasturcture
+Both programms need the same Datastructure.
 
 To be able to run make a Folder named Pi_Pictures and 
 insert the following dataset to it:
