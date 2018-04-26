@@ -5,7 +5,7 @@ insert the following dataset to it:
 
 https://1drv.ms/f/s!AuWBEgPP6FxOuCJtC2cxwA6iuaWL
 
-<<<<<<< HEAD
+
 Example Datastructure:
 
 ->Model_trainer.py
@@ -18,15 +18,3 @@ Example Datastructure:
 	->Test
 		->Balls
 		...
-=======
-Example datastructure
-
--> Model_trainer.py
--> Pi_Pictures
-  ->Train
-    -> Balls
-    .....
-  ->Test
-    -> Balls
-    .....
->>>>>>> d1109e1fd5488d233c47ff7b2a0490d0b0f1c76f
