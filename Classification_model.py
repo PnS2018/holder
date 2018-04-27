@@ -73,11 +73,10 @@ class Classification_model:
         # (std, mean, and principal components if ZCA whitening is applied)
         datagen.fit(train_x)
 
-        csvlogger = CSVLogger(self.designator + ".csv")
+##        csvlogger = CSVLogger(self.designator + ".csv")
         # fits the model on batches with real-time data augmentation:
         self.model.fit_generator(datagen.flow(train_x, train_Y, batch_size=batch_size),
-                            steps_per_epoch=len(train_x) / batch_size, epochs=epochs,
-                                 callbacks=[csvlogger,])
+                            steps_per_epoch=len(train_x) / batch_size, epochs=epochs)
 
         print("[MESSAGE] Model is trained.")
 

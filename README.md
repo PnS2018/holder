@@ -1,6 +1,4 @@
-There are 2 Models to be train. If one executes Model_trainer.py both should be trained. (I hope)
-
-If this is not the case just execute Model_trainer2.py which will train the real time system.
+There are 2 Models to be train. If one executes Model_trainer.py both should be trained.
 
 Both programms need the same Datastructure.
 
