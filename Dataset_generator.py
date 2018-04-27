@@ -22,7 +22,7 @@ resize_y = 0.5
 shape = (int(480*resize_x), int(640*resize_y), 1) #1 because greyscale
 #train options
 batch_size = 20
-epochs = 15
+epochs = 20
 rot_range = 20
 width_range = 0.2
 height_range = 0.2
