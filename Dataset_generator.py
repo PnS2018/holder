@@ -7,41 +7,10 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import imageProcessing as ip
 
-#
-#ALL variables are here except the ones for declaring model Size
-#and the threshold for no object.
-
-
-Feature_number = 10
-PicturesPFeature_train = 150
-PicturesPFeature_test = 30
-color = 0
-resize_x = 0.5
-resize_y = 0.5
-shape = (int(480*resize_x), int(640*resize_y), 1) #1 because greyscale
-#train options
-batch_size = 20
-epochs = 20
-rot_range = 20
-width_range = 0.2
-height_range = 0.2
-h_flip = True
-v_flip = True
-
-def get_num_of_classes():
-    return Feature_number
-def get_resize():
-    output = (resize_x, resize_y)
-    return output
-
-
-def train_options():
-    output = (batch_size, epochs, rot_range, width_range, height_range, h_flip,v_flip)
-    return output
-
-def load_train_set():
-    train_x = np.zeros((Feature_number*PicturesPFeature_train, int(resize_x*480), int(resize_y*640)), dtype=np.uint8)
+def load_train_set(Feature_number, PicturesPFeature_train, batch_shape):
+    train_x = np.zeros((Feature_number*PicturesPFeature_train, batch_shape[0], batch_shape[1]), dtype=np.uint8)
     train_y = np.zeros((Feature_number*PicturesPFeature_train, 1))
     for i in range (0,Feature_number):
         for k in range (0,PicturesPFeature_train):
@@ -67,13 +36,13 @@ def load_train_set():
                 feature = 'Pi_Pictures/Train/Yoghurt/9_picture'
             train_y[i*PicturesPFeature_train+k] = int(i)
             string = feature + str(k) + '.png'
-            train_x[i*PicturesPFeature_train+k] = cv2.resize(cv2.imread(string, 0), (0,0), fx=resize_x, fy=resize_y)
+            train_x[i*PicturesPFeature_train+k] = ip.resize_to_item(cv2.imread(string, 0), batch_shape)
 
-    output = (train_x, train_y, Feature_number, shape)
+    output = (train_x, train_y)
     return output
 
-def load_valid_set():
-    valid_x = np.zeros((Feature_number*PicturesPFeature_test, int(resize_x*480), int(resize_y*640)), dtype=np.uint8)
+def load_valid_set(Feature_number, PicturesPFeature_test, batch_shape):
+    valid_x = np.zeros((Feature_number*PicturesPFeature_test, batch_shape[0], batch_shape[1]), dtype=np.uint8)
     valid_y = np.zeros((Feature_number*PicturesPFeature_test, 1))
     for i in range (0,Feature_number):
         for k in range (0,PicturesPFeature_test):
@@ -99,8 +68,7 @@ def load_valid_set():
                 feature = 'Pi_Pictures/Test/Yoghurt/9_picture'
             valid_y[i*PicturesPFeature_test+k] = int(i)
             string = feature + str(k) + '.png'
-            valid_x[i*PicturesPFeature_test+k] = cv2.resize(cv2.imread(string, 0), (0,0), fx=resize_x, fy=resize_y)
-
+            valid_x[i*PicturesPFeature_test+k] = ip.resize_to_item(cv2.imread(string, 0), batch_shape)
 
     output = (valid_x, valid_y)
     return output

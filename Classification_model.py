@@ -7,28 +7,85 @@ import os
 
 from Dataset_generator import *
 
-# CAREFUL: self.num_classes should be in the last self.y instead of the ten
-
 class Classification_model:
     def __init__(self,designator):
-        self.designator = designator
-        feature_number = get_num_of_classes()
-        self.x = Input(shape)
 
-        self.y = Conv2D(filters=20,
-                   kernel_size=(7, 7),
+        self.num_classes = 10
+        self.picturesPFeature_train = 150
+        self.picturesPFeature_test = 30
+        self.shape = (int(64), int(64), 1)
+        # train options
+        self.batch_size = 200
+        self.epochs = 400
+        self.rot_range = 20
+        self.width_range = 0.2
+        self.height_range = 0.2
+        self.zoom = 0.3
+        self.activation_conv = "relu"
+        self.activation_dense = "softmax"
+
+        self.kernel_size_first = 3
+        self.kernel_size_second = 3
+
+        self.designator = designator
+        self.create_model1()
+
+
+    def create_model1(self):
+        
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=5,
+                   kernel_size=(23, 23),
                    padding="same",
-                   activation="relu",
+                   activation=self.activation_conv,
                    )(self.x)
         self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
         self.y = Conv2D(filters=25,
                    kernel_size=(5, 5),
                    padding="same",
-                   activation="relu",
+                   activation=self.activation_conv,
                    )(self.y)
         self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
         self.y = Flatten()(self.y)
-        self.y = Dense(feature_number, activation="softmax", )(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                      optimizer="adam",
+                      metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
+    def create_model2(self):
+        
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=5,
+                   kernel_size=(21, 21),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.x)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=25,
+                   kernel_size=(7, 7),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=47,
+                   kernel_size=(3, 3),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
         self.model = Model(self.x, self.y)
 
         print("[MESSAGE] Model is defined.")
@@ -44,12 +101,10 @@ class Classification_model:
 
 
     def train_model(self):
-        #Load training values
-        (batch_size, epochs, rot_range, width_range, height_range, h_flip,v_flip) = train_options()
         # load training dataset
         # shape = (width,height,channels) i.e shape = (224,256,3) for a 224x256 (widthxheight) with 3 RGB channels
-        (train_x, train_y, self.num_classes, self.shape) = load_train_set()
-        (valid_x, valid_y) = load_valid_set()
+        (train_x, train_y) = load_train_set(self.num_classes, self.picturesPFeature_train, self.shape)
+        (valid_x, valid_y) = load_valid_set(self.num_classes, self.picturesPFeature_test, self.shape)
         train_x = train_x[..., np.newaxis]
         valid_x = valid_x[..., np.newaxis]
 
@@ -61,13 +116,14 @@ class Classification_model:
         print("[MESSAGE] Converted labels to categorical labels.")
 
         datagen = image.ImageDataGenerator(
-            featurewise_center = True,
-            featurewise_std_normalization = True,
-            rotation_range = rot_range,
-            width_shift_range = width_range,
-            height_shift_range = height_range,
-            horizontal_flip = h_flip,
-            vertical_flip = v_flip)
+	        samplewise_center = True,
+	        samplewise_std_normalization = True,
+            rotation_range = self.rot_range,
+            width_shift_range = self.width_range,
+            height_shift_range = self.height_range,
+            zoom_range = [1-self.zoom, 1+self.zoom],
+            horizontal_flip = True,
+            vertical_flip = True)
 
         # compute quantities required for featurewise normalization
         # (std, mean, and principal components if ZCA whitening is applied)
@@ -75,9 +131,10 @@ class Classification_model:
 
         csvlogger = CSVLogger(self.designator + ".csv")
         # fits the model on batches with real-time data augmentation:
-        self.model.fit_generator(datagen.flow(train_x, train_Y, batch_size=batch_size),
-                            steps_per_epoch=len(train_x) / batch_size, epochs=epochs,
-                            callbacks=[csvlogger])
+        self.model.fit_generator(datagen.flow(train_x, train_Y, batch_size=self.batch_size),
+                            steps_per_epoch=len(train_x) / self.batch_size, epochs=self.epochs,
+                            callbacks =[csvlogger],
+			    validation_data=datagen.flow(valid_x, valid_Y, batch_size=self.batch_size))
 
         print("[MESSAGE] Model is trained.")
 
@@ -98,8 +155,32 @@ class Classification_model:
         return self.model
 
     def get_number_of_classes(self):
-        output = get_num_of_classes()
+        output = self.num_classes
         return output
 
     def get_input_shape(self):
         return self.shape
+    
+    def set_parameter(self,s,b,e,r,w,h,z, model_choice):
+        self.shape = (int(s),int(s),1)
+        self.batch_size = b
+        self.epochs = e
+        self.rot_range = r
+        self.width_range = w
+        self.height_range = h
+        self.zoom = z
+        if model_choice == 1:
+            self.create_model1()
+        else:
+            self.create_model2()
+
+
+
+
+
+
+
+
+
+
+
