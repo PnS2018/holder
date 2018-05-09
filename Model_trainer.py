@@ -62,17 +62,17 @@ cm11.load_model()
 cm11.train_model()
 
 cm12 = Cm("d(3_5)_s(32)_b(30)_e(800)_r(1)_w(0_5)_h(0_5)_z(0_9)_m2")
-cm12.set_parameter(64,30,800,1,0.5,0.5,0.9,2)
+cm12.set_parameter(32,30,800,1,0.5,0.5,0.9,2)
 cm12.load_model()
 cm12.train_model()
 
 cm13 = Cm("d(3_5)_s(32)_b(150)_e(400)_r(0_7)_w(0_1)_h(0_1)_z(0_6)_m2")
-cm13.set_parameter(64,150,400,0.7,0.1,0.1,0.6,2)
+cm13.set_parameter(32,150,400,0.7,0.1,0.1,0.6,2)
 cm13.load_model()
 cm13.train_model()
 
-cm14 = Cm("d(3_5)_x(32)_b(20)_e(400)_r(0_6)_w(0_3)_h(0_1)_z(0_5)_m2")
-cm14.set_parameter(64,20,400,0.6,0.3,0.1,0.5,2)
+cm14 = Cm("d(3_5)_s(32)_b(20)_e(400)_r(0_6)_w(0_3)_h(0_1)_z(0_5)_m2")
+cm14.set_parameter(32,20,400,0.6,0.3,0.1,0.5,2)
 cm14.load_model()
 cm14.train_model()
 
