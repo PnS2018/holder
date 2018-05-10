@@ -100,6 +100,82 @@ class Classification_model:
         print ("[MESSAGE] Model is compiled.")
 
 
+    def create_model3(self):
+        
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=10,
+                   kernel_size=(31, 31),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.x)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=25,
+                   kernel_size=(19, 19),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=47,
+                   kernel_size=(5, 5),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                      optimizer="adam",
+                      metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
+
+    def create_model4(self):
+        
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=5,
+                   kernel_size=(15, 15),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.x)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=25,
+                   kernel_size=(9, 9),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=47,
+                   kernel_size=(3, 3),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                      optimizer="adam",
+                      metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
+
     def train_model(self):
         # load training dataset
         # shape = (width,height,channels) i.e shape = (224,256,3) for a 224x256 (widthxheight) with 3 RGB channels
@@ -171,8 +247,12 @@ class Classification_model:
         self.zoom = z
         if model_choice == 1:
             self.create_model1()
-        else:
+        elif model_choice == 2:
             self.create_model2()
+        elif model_choice == 3:
+            self.create_model3()
+        elif model_choice == 4:
+            self.create_model4()
 
 
 
