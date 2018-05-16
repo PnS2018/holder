@@ -6,6 +6,7 @@ def resize_to_item(image, batch_shape):
     size = (batch_shape[0],batch_shape[1])
 
     thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 1801, 41)
+    #For Raspberry PI: contours, _ = cv2.findContours(thresh, 1, 2)
     _, contours, _ = cv2.findContours(thresh, 1, 2)
     idx = -1  # The index of the contour that surrounds your object
     mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise

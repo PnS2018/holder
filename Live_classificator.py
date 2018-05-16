@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from Classification_model import Classification_model as Cm
 from Dataset_generator import *
+import imageProcessing as ip
 import keras.backend as K
 
 
@@ -17,7 +18,8 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 # allow the camera to warmup
 time.sleep(0.1)
 
-cm = Cm("conv_net_real_time")
+cm = Cm("d(3_5)_s(64)_b(100)_e(400)_r(0_3)_w(0_1)_h(0_1)_z(0_3)_m2")
+cm.set_parameter(64,100,400,0.3,0.1,0.1,0.3,2)
 cm.load_model()
 #cm.train_model()
 model = cm.get_model()
@@ -25,7 +27,6 @@ model = cm.get_model()
 
 no_object_threshold = 0.1
 num_class = cm.get_number_of_classes()
-(resize_x, resize_y) = cm.get_resize_factors()
 
 
 labels = ["Ball", "Bottle", "Can", "Cup", "Face", "Pen", "Phone", "Shoe", "Silverware", "Yogurt"]

@@ -99,7 +99,9 @@ class Classification_model:
                       metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
 
+#THAT ONE IS TRASH
 
+'''
     def create_model3(self):
         
         self.x = Input(self.shape)
@@ -136,7 +138,44 @@ class Classification_model:
                       optimizer="adam",
                       metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
+'''
 
+    def create_model3(self):
+        
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=11,
+                   kernel_size=(15, 15),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.x)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=19,
+                   kernel_size=(5, 5),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=47,
+                   kernel_size=(3, 3),
+                   padding="same",
+                   activation=self.activation_conv,
+                   )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                      optimizer="adam",
+                      metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
 
     def create_model4(self):
         
