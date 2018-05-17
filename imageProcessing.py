@@ -14,6 +14,8 @@ def resize_to_item(image, batch_shape):
 
     # Now crop
     (y, x) = np.where(mask == 255)
+    if(len(x)== 0 | len(y) == 0):
+        return -1
     (topx, topy) = (np.max(x), np.max(y))
     (bottomx, bottomy) = (np.min(x), np.min(y))
 

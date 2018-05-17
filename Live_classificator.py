@@ -38,18 +38,19 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     batch = ip.resize_to_item(image_gray, cm.shape)
-    batch = batch.astype(np.float64)
-    batch -= np.mean(batch, keepdims=True)
-    batch /= (np.std(batch, keepdims=True) + K.epsilon())
-    # predict with the model
+    if(batch != -1):
+        batch = batch.astype(np.float64)
+        batch -= np.mean(batch, keepdims=True)
+        batch /= (np.std(batch, keepdims=True) + K.epsilon())
+        # predict with the model
     
-    preds = model.predict(np.expand_dims(np.expand_dims(batch, axis=0),axis =3))
-    end = time.time()
-    print end - start
-    print preds
-    #check if there is a object infront of the camera
-    if np.max(preds) > no_object_threshold:
-       print labels[np.argmax(preds).astype(np.int)]
+        preds = model.predict(np.expand_dims(np.expand_dims(batch, axis=0),axis =3))
+        end = time.time()
+        print end - start
+        print preds
+        #check if there is a object infront of the camera
+        if np.max(preds) > no_object_threshold:
+            print labels[np.argmax(preds).astype(np.int)]
     key = cv2.waitKey(100)
     if key==ord('q'):
         break

@@ -1,4 +1,4 @@
-from keras.layers import Input, Dense, Conv2D, MaxPooling2D, Flatten
+from keras.layers import Input, Dense, Conv2D, MaxPooling2D, Flatten, AveragePooling2D
 from keras.models import Model
 from keras.preprocessing import image
 from keras.utils import to_categorical
@@ -30,7 +30,7 @@ class Classification_model:
         self.designator = designator
         self.create_model1()
 
-
+    #TRASH
     def create_model1(self):
         
         self.x = Input(self.shape)
@@ -62,6 +62,8 @@ class Classification_model:
                       metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
 
+
+    #Worse than model4
     def create_model2(self):
         
         self.x = Input(self.shape)
@@ -101,7 +103,7 @@ class Classification_model:
 
 #THAT ONE IS TRASH
 
-'''
+    '''
     def create_model3(self):
         
         self.x = Input(self.shape)
@@ -138,10 +140,10 @@ class Classification_model:
                       optimizer="adam",
                       metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
-'''
+    '''
 
+    #Similar to model 4. Wrong kernel size. Need to be ascending
     def create_model3(self):
-        
         self.x = Input(self.shape)
 
         self.y = Conv2D(filters=11,
@@ -177,6 +179,8 @@ class Classification_model:
                       metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
 
+
+    # Similar to model 3. Wrong kernel size. Need to be ascending
     def create_model4(self):
         
         self.x = Input(self.shape)
@@ -213,6 +217,131 @@ class Classification_model:
                       optimizer="adam",
                       metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
+
+    #same as mode 4, but with ascending kernel size
+    def create_model5(self):
+
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=5,
+                        kernel_size=(3, 3),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.x)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(9, 9),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=47,
+                        kernel_size=(15, 15),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                           optimizer="adam",
+                           metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
+    #Same as model5 but with avgpooling
+    def create_model6(self):
+
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=5,
+                        kernel_size=(3, 3),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.x)
+        self.y = AveragePooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(9, 9),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = AveragePooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=47,
+                        kernel_size=(15, 15),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = AveragePooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                           optimizer="adam",
+                           metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
+    #With strided convolution rather than Maxpooling
+    def create_model7(self):
+
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=5,
+                        kernel_size=(15, 15),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.x)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(9, 9),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(5, 5),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=47,
+                        kernel_size=(3, 3),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=13,
+                        kernel_size=(3, 3),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                           optimizer="adam",
+                           metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
 
 
     def train_model(self):
@@ -292,6 +421,12 @@ class Classification_model:
             self.create_model3()
         elif model_choice == 4:
             self.create_model4()
+        elif model_choice == 5:
+            self.create_model5()
+        elif model_choice == 6:
+            self.create_model6()
+        elif model_choice == 7:
+            self.create_model7()
 
 
 
