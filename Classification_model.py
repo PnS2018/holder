@@ -294,7 +294,7 @@ class Classification_model:
                            metrics=["mse", "accuracy"])
         print ("[MESSAGE] Model is compiled.")
 
-    #With strided convolution rather than Maxpooling
+    #With strided convolution rather than Maxpooling, but descending kernel size
     def create_model7(self):
 
         self.x = Input(self.shape)
@@ -312,6 +312,42 @@ class Classification_model:
                         )(self.y)
         self.y = Conv2D(filters=25,
                         kernel_size=(5, 5),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=47,
+                        kernel_size=(3, 3),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=13,
+                        kernel_size=(3, 3),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        # With strided convolution, larger network than model7 and ascending kernel size
+    def create_model8(self):
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=57,
+                        kernel_size=(3, 3),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.x)
+        self.y = Conv2D(filters=39,
+                        kernel_size=(5, 5),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(7, 7),
                         padding="same",
                         activation=self.activation_conv,
                         )(self.y)
@@ -427,6 +463,8 @@ class Classification_model:
             self.create_model6()
         elif model_choice == 7:
             self.create_model7()
+        elif model_choice == 8:
+            self.create_model8()
 
 
 
