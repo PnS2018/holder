@@ -18,8 +18,8 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 # allow the camera to warmup
 time.sleep(0.1)
 
-cm = Cm("d(3_5)_s(64)_b(100)_e(400)_r(0_3)_w(0_1)_h(0_1)_z(0_3)_m2")
-cm.set_parameter(64,100,400,0.3,0.1,0.1,0.3,2)
+cm = Cm("d(17_5)_s(64)_b(100)_e(400)_r(0.7)_w(0_1)_h(0_1)_z(0_25)_m8")
+cm.set_parameter(64,100,400,0.7,0.1,0.1,0.25,8)
 cm.load_model()
 #cm.train_model()
 model = cm.get_model()
