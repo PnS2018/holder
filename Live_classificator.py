@@ -28,6 +28,8 @@ model = cm.get_model()
 no_object_threshold = 0.1
 num_class = cm.get_number_of_classes()
 
+noBatch = np.zeros((cm.shape[0],cm.shape[1]))-1;
+
 
 labels = ["Ball", "Bottle", "Can", "Cup", "Face", "Pen", "Phone", "Shoe", "Silverware", "Yogurt"]
 
@@ -38,7 +40,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     batch = ip.resize_to_item(image_gray, cm.shape)
-    if(batch != -1):
+    if(np.array_equal(batch, noBatch)):
         batch = batch.astype(np.float64)
         batch -= np.mean(batch, keepdims=True)
         batch /= (np.std(batch, keepdims=True) + K.epsilon())
@@ -51,6 +53,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #check if there is a object infront of the camera
         if np.max(preds) > no_object_threshold:
             print labels[np.argmax(preds).astype(np.int)]
+        else:
+            print("not sure what kind of item")
+    else:
+        print("no item detected")
     key = cv2.waitKey(100)
     if key==ord('q'):
         break
