@@ -335,12 +335,12 @@ class Classification_model:
     def create_model8(self):
         self.x = Input(self.shape)
 
-        self.y = Conv2D(filters=57,
+        self.y = Conv2D(filters=13,
                         kernel_size=(3, 3),
                         padding="same",
                         activation=self.activation_conv,
                         )(self.x)
-        self.y = Conv2D(filters=39,
+        self.y = Conv2D(filters=17,
                         kernel_size=(5, 5),
                         strides=(2, 2),
                         padding="same",
