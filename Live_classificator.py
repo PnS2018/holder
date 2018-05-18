@@ -25,10 +25,18 @@ cm.load_model()
 model = cm.get_model()
 
 
-no_object_threshold = 0.1
+no_object_threshold = 0.9
 num_class = cm.get_number_of_classes()
 
 noBatch = np.zeros((cm.shape[0],cm.shape[1]))-1;
+
+#Initialising Writing on Image
+font = cv2.FONT_HERSHEY_SIMPLEX
+beginningText = (10,470)
+fontScale = 1
+fontColor = (0, 255, 255)
+lineType = 2
+
 
 
 labels = ["Ball", "Bottle", "Can", "Cup", "Face", "Pen", "Phone", "Shoe", "Silverware", "Yogurt"]
@@ -40,7 +48,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     batch = ip.resize_to_item(image_gray, cm.shape)
-    if(np.array_equal(batch, noBatch)):
+    if(not np.array_equal(batch, noBatch)):
         batch = batch.astype(np.float64)
         batch -= np.mean(batch, keepdims=True)
         batch /= (np.std(batch, keepdims=True) + K.epsilon())
@@ -53,13 +61,20 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #check if there is a object infront of the camera
         if np.max(preds) > no_object_threshold:
             print labels[np.argmax(preds).astype(np.int)]
+            cv2.putText(image, labels[np.argmax(preds).astype(np.int)],
+                        beginningText, font, fontScale,fontColor,lineType)
         else:
             print("not sure what kind of item")
+            cv2.putText(image, 'not sure what kind of item',
+                        beginningText, font, fontScale,fontColor,lineType)
     else:
         print("no item detected")
+        cv2.putText(image, 'no item detected',
+                    beginningText, font, fontScale,fontColor,lineType)
     key = cv2.waitKey(100)
     if key==ord('q'):
         break
+
     cv2.imshow('frame', image)
 
     rawCapture.truncate(0)

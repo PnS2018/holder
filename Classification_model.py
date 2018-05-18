@@ -379,6 +379,97 @@ class Classification_model:
         print ("[MESSAGE] Model is compiled.")
 
 
+    def create_model9(self):
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=13,
+                        kernel_size=(3, 3),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.x)
+        self.y = Conv2D(filters=17,
+                        kernel_size=(5, 5),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(7, 7),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=35,
+                        kernel_size=(9, 9),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=27,
+                        kernel_size=(11, 11),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=13,
+                        kernel_size=(13, 13),
+                        strides=(2, 2),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Conv2D(filters=15,
+                        kernel_size=(15, 15),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                           optimizer="adam",
+                           metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
+
+    def create_model10(self):
+
+        self.x = Input(self.shape)
+
+        self.y = Conv2D(filters=13,
+                        kernel_size=(9, 9),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.x)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=25,
+                        kernel_size=(13, 13),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = MaxPooling2D((2, 2), strides=(2, 2))(self.y)
+        self.y = Conv2D(filters=35,
+                        kernel_size=(15, 15),
+                        padding="same",
+                        activation=self.activation_conv,
+                        )(self.y)
+        self.y = Flatten()(self.y)
+        self.y = Dense(self.num_classes, activation=self.activation_dense, )(self.y)
+        self.model = Model(self.x, self.y)
+
+        print("[MESSAGE] Model is defined.")
+
+        # print model summary
+        self.model.summary()
+
+        # compile the model aganist the categorical cross entropy loss and use SGD optimizer
+        self.model.compile(loss="categorical_crossentropy",
+                           optimizer="adam",
+                           metrics=["mse", "accuracy"])
+        print ("[MESSAGE] Model is compiled.")
 
     def train_model(self):
         # load training dataset
@@ -465,6 +556,10 @@ class Classification_model:
             self.create_model7()
         elif model_choice == 8:
             self.create_model8()
+        elif model_choice == 9:
+            self.create_model9()
+        elif model_choice == 10:
+            self.create_model10()
 
 
 
