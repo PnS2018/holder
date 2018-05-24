@@ -25,7 +25,7 @@ cm.load_model()
 model = cm.get_model()
 
 
-no_object_threshold = 0.9
+no_object_threshold = 0.5
 num_class = cm.get_number_of_classes()
 
 noBatch = np.zeros((cm.shape[0],cm.shape[1]))-1;
@@ -47,7 +47,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     start = time.time()
     image = frame.array
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    batch = ip.resize_to_item(image_gray, cm.shape)
+    batch = ip.resize_to_item(image_gray, cm.shape, 17)
+    cv2.imshow('batch',batch)
     if(not np.array_equal(batch, noBatch)):
         batch = batch.astype(np.float64)
         batch -= np.mean(batch, keepdims=True)
@@ -57,7 +58,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         preds = model.predict(np.expand_dims(np.expand_dims(batch, axis=0),axis =3))
         end = time.time()
         print end - start
-        print preds
+        #print preds
         #check if there is a object infront of the camera
         if np.max(preds) > no_object_threshold:
             print labels[np.argmax(preds).astype(np.int)]

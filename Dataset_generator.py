@@ -36,7 +36,7 @@ def load_train_set(Feature_number, PicturesPFeature_train, batch_shape):
                 feature = 'Pi_Pictures/Train/Yoghurt/9_picture'
             train_y[i*PicturesPFeature_train+k] = int(i)
             string = feature + str(k) + '.png'
-            train_x[i*PicturesPFeature_train+k] = ip.resize_to_item(cv2.imread(string, 0), batch_shape)
+            train_x[i*PicturesPFeature_train+k] = ip.resize_to_item(cv2.imread(string, 0), batch_shape,41)
 
     output = (train_x, train_y)
     return output
@@ -68,7 +68,7 @@ def load_valid_set(Feature_number, PicturesPFeature_test, batch_shape):
                 feature = 'Pi_Pictures/Test/Yoghurt/9_picture'
             valid_y[i*PicturesPFeature_test+k] = int(i)
             string = feature + str(k) + '.png'
-            valid_x[i*PicturesPFeature_test+k] = ip.resize_to_item(cv2.imread(string, 0), batch_shape)
+            valid_x[i*PicturesPFeature_test+k] = ip.resize_to_item(cv2.imread(string, 0), batch_shape,41)
 
     output = (valid_x, valid_y)
     return output
