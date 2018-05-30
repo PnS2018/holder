@@ -9,6 +9,7 @@ import imageProcessing as ip
 import keras.backend as K
 from check_equal import *
 import os
+#from collections import Counter
 
 '''
 INITIALIZING ALL VARIABLES AND THE MODEL
@@ -36,7 +37,7 @@ num_class = cm.get_number_of_classes()
 
 #For checking if our prediction is correct just check if the last x frames
 #showed the same prediction. if it doesnt then its wrong
-precedent =[0]*6
+precedent =[0]*7
 counter = 0
 flag = 0
 #need to do this for initial value to not always give out the value
@@ -83,6 +84,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #And also check if the last 5 images seen are the same prediction and
         #if the last prediction is the same then the prediction now
         print precedent
+        #check = counter(precedent)
+        #if check.most_common(1)[1] > 5:
         if checkEqual(precedent):
             if precedent[1] == "Not sure what Item it is":
                 print("Not sure what Item it is")
@@ -113,7 +116,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
                 beginningText, font, fontScale,fontColor,lineType)
 
     counter = counter + 1
-    if counter == 6:
+    if counter == 7:
         counter = 0
     
     key = cv2.waitKey(100)
