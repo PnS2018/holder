@@ -9,7 +9,7 @@ import imageProcessing as ip
 import keras.backend as K
 from check_equal import *
 import os
-#from collections import Counter
+from collections import Counter
 
 '''
 INITIALIZING ALL VARIABLES AND THE MODEL
@@ -37,7 +37,7 @@ num_class = cm.get_number_of_classes()
 
 #For checking if our prediction is correct just check if the last x frames
 #showed the same prediction. if it doesnt then its wrong
-precedent =[0]*7
+precedent =["No Item Detected"]*7
 counter = 0
 flag = 0
 #need to do this for initial value to not always give out the value
@@ -69,7 +69,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     image = frame.array
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    batch = ip.resize_to_item(image_gray, cm.shape, 25)
+    batch = ip.resize_to_item(image_gray, cm.shape, 37)
     if(not np.array_equal(batch, noBatch)):
         batch = batch.astype(np.float64)
         batch -= np.mean(batch, keepdims=True)
@@ -84,20 +84,20 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #And also check if the last 5 images seen are the same prediction and
         #if the last prediction is the same then the prediction now
         print precedent
-        #check = counter(precedent)
-        #if check.most_common(1)[1] > 5:
-        if checkEqual(precedent):
-            if precedent[1] == "Not sure what Item it is":
+        check = Counter(precedent)
+        if check.most_common(1)[0][1] > 3:
+        #if checkEqual(precedent):
+            if check.most_common(1)[0][0] == "Not sure what Item it is":
                 print("Not sure what Item it is")
                 cv2.putText(image, 'Not sure what kind of Item',
                         beginningText, font, fontScale,fontColor,lineType)
-            elif precedent[1] == "No Item Detected":
+            elif check.most_common(1)[0][0] == "No Item Detected":
                 print("No Item Detected")
                 cv2.putText(image, 'No Item Detected',
                         beginningText, font, fontScale,fontColor,lineType)
             else:
-                print precedent[1]
-                cv2.putText(image, precedent[1],
+                print check.most_common(1)[0][0]
+                cv2.putText(image, check.most_common(1)[0][0],
                         beginningText, font, fontScale,fontColor,lineType)
         else:
             print("Not sure what Item it is")
